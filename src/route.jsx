@@ -1,7 +1,7 @@
 // src/routes/index.jsx
 import { createBrowserRouter, Outlet, useRouteError } from "react-router-dom";
 import Home from "./components/pages/Home";
-import Navbar from "./components/ui/navbar";
+import Navbar from "./components/ui/Navbar";
 import DashboardNavbar from "./components/ui/DashboardNav";
 import Dashboard from "./components/pages/Dashboard";
 import PayrollSetup from "./components/pages/Payrol";
