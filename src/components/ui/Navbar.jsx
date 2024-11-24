@@ -1,4 +1,4 @@
-import { BiChevronDown } from "react-icons/bi";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 export default function Navbar() {
   return (
@@ -21,25 +21,23 @@ export default function Navbar() {
 
         {/* Navigation Links */}
         <div className="hidden md:flex items-center space-x-8">
-          <div className="flex items-center cursor-pointer">
-            Features <BiChevronDown className="ml-1 w-4 h-4" />
-          </div>
+          <a href="#" className="text-gray-600 hover:text-gray-900">
+            Features
+          </a>
           <a href="#" className="text-gray-600 hover:text-gray-900">
             About
           </a>
           {/* <a href="#" className="text-gray-600 hover:text-gray-900">
             Customers
           </a> */}
-          <a href="#" className="text-gray-600 hover:text-gray-900">
+          {/* <a href="#" className="text-gray-600 hover:text-gray-900">
             Pricing
-          </a>
+          </a> */}
         </div>
 
         {/* Auth Buttons */}
         <div className="flex items-center space-x-4">
-          <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
-            Connect wallet
-          </button>
+          <WalletMultiButton />
         </div>
       </nav>
     </div>

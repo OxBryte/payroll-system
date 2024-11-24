@@ -5,6 +5,8 @@ import Navbar from "./components/ui/Navbar";
 import DashboardNavbar from "./components/ui/DashboardNav";
 import Dashboard from "./components/pages/Dashboard";
 import PayrollSetup from "./components/pages/Payrol";
+import PayrollSystem from "./components/pages/PaySystem";
+import Footer from "./components/ui/Footer";
 
 // Layout component that includes common elements like navigation
 const RootLayout = () => {
@@ -13,6 +15,7 @@ const RootLayout = () => {
       <main>
         <Navbar />
         <Outlet />
+        <Footer />
       </main>
     </div>
   );
@@ -115,8 +118,8 @@ const router = createBrowserRouter([
         element: <PayrollSetup />,
       },
       {
-        path: "create-payroll",
-        element: <Dashboard />,
+        path: "pay",
+        element: <PayrollSystem />,
       },
     ],
   },

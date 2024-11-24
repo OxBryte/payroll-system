@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, DollarSign, Loader2, Check } from "lucide-react";
+import { DollarSign, Loader2, Check } from "lucide-react";
 
 const PayrollSetup = () => {
   const [step, setStep] = useState(1);

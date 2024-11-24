@@ -1,4 +1,10 @@
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { Link } from "react-router-dom";
+
 export default function Hero() {
+  const { connected } = useWallet();
+
   return (
     <>
       <div className="max-w-6xl mx-auto px-6 py-16 text-center container">
@@ -26,9 +32,19 @@ export default function Hero() {
         </div>
 
         {/* CTA Button */}
-        <button className="bg-gray-900 text-white px-8 py-3 rounded-lg text-lg hover:bg-gray-800">
-          Get Started
-        </button>
+        {!connected ? (
+          <WalletMultiButton />
+        ) : (
+          <Link to="/payroll">
+            <button className="bg-gray-900 text-white px-8 py-3 rounded-lg text-lg hover:bg-gray-800">
+              Get Started
+            </button>
+          </Link>
+        )}
+
+        <div className="mt-20 rounded-xl overflow-hidden">
+          <img src="/img.png" alt="" />
+        </div>
       </div>
     </>
   );
