@@ -5,9 +5,15 @@ import { useNavigate } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
 export const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useContext(AuthContext);
+  const { user, loading, revalidateUser } = useContext(AuthContext);
   // const { publicKey, connected } = useWallet();
   const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (user) {
+  //     revalidateUser();
+  //   }
+  // }, [user, revalidateUser]);
 
   useEffect(() => {
     if (!loading && !user) {

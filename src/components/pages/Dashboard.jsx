@@ -23,7 +23,7 @@ const Dashboard = () => {
   }, [user, connected, navigate, publicKey]);
 
   const statisticsData = [
-    { label: "Total Revenue", value: `${formatCurrency(user.user.amount)}` },
+    { label: "Total Revenue", value: `${formatCurrency(user?.user?.amount)}` },
     { label: "Total Expenses", value: "$00" },
     { label: "Net Profit", value: "$00" },
   ];

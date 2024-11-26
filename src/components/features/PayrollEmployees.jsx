@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Building,
   CheckCircle2,
@@ -26,6 +26,7 @@ export default function PayrollEmployees() {
   });
 
   const { user } = useContext(AuthContext);
+
   const parsed = user?.user;
   const payrollId = user?.user?.id;
 
@@ -102,9 +103,9 @@ export default function PayrollEmployees() {
                 </tr>
               </thead>
               <tbody>
-                {parsed?.employees.map((employee) => (
+                {parsed?.employees.map((employee, i) => (
                   <tr
-                    key={employee.id}
+                    key={i}
                     className="text-[12px] hover:bg-gray-50"
                   >
                     <td className="py-2 px-4 border-b text-left">
