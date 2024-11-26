@@ -7,20 +7,17 @@ import { truncate } from "../utils/util";
 const PayrollSetup = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [paymentInterval, setPaymentInterval] = useState("monthly");
   const [formData, setFormData] = useState({
     title: "",
     amount: "",
     description: "",
+    interval: paymentInterval,
   });
   const { publicKey } = useWallet();
 
-  console.log(formData, publicKey);
-  
-
-  const {
-    submitWalletAddress,
-    loading: submitLoading,
-  } = useSubmitWalletAddress();
+  const { submitWalletAddress, loading: submitLoading } =
+    useSubmitWalletAddress();
 
   const handleFund = async () => {
     try {
@@ -141,6 +138,29 @@ const PayrollSetup = () => {
                     />
                   </div>
                 </div>
+                <div className="space-y-4">
+                  <label className="block text-sm font-medium mb-1.5 text-gray-700">
+                    Select Interval
+                  </label>
+                  <div className="flex space-x-2">
+                    {["weekly", "bi-weekly", "monthly"].map((interval) => (
+                      <button
+                        key={interval}
+                        onClick={() => {
+                          setPaymentInterval(interval);
+                          setFormData({ ...formData, interval }); // Update formData with the selected interval
+                        }}
+                        className={`px-4 py-2 rounded-lg text-sm capitalize ${
+                          paymentInterval === interval
+                            ? "bg-blue-600 text-white"
+                            : "bg-white text-gray-600 hover:bg-gray-100"
+                        }`}
+                      >
+                        {interval}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <button
                   onClick={handleNext}
                   disabled={!formData.amount || loading}
@@ -187,12 +207,12 @@ const PayrollSetup = () => {
                       {truncate(publicKey.toBase58(), 14)}
                     </span>
                   </div>
-                  {/* <div className="flex justify-between items-center mb-3 pb-3 border-b border-gray-200">
-                    <span className="text-sm text-gray-600">Payroll Description</span>
+                  <div className="flex justify-between items-center mb-3 pb-3 border-b border-gray-200">
+                    <span className="text-sm text-gray-600">Interval</span>
                     <span className="font-medium text-gray-900">
-                      {formData.description}
+                      {formData.interval}
                     </span>
-                  </div> */}
+                  </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Amount</span>
                     <span className="font-medium text-gray-900">

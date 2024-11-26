@@ -13,6 +13,7 @@ const useSubmitWalletAddress = () => {
       payrollTitle: payrollData.title,
       payrollDescription: payrollData.description,
       amount: payrollData.amount,
+      interval: payrollData.interval,
     };
 
     try {

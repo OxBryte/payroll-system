@@ -57,7 +57,7 @@ export default function Hero() {
           <WalletMultiButton />
           <Link to={connected ? "/payroll" : null}>
             <button className="bg-gray-900 text-white px-8 py-3 rounded-lg text-lg hover:bg-gray-800">
-              Dashboard
+              Get Started
             </button>
           </Link>
         </div>

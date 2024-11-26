@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   DollarSign,
   Pause,
@@ -9,12 +9,17 @@ import {
   ChevronDown,
   Clock,
 } from "lucide-react";
+import { AuthContext } from "../context/userContext";
 
+// eslint-disable-next-line react/prop-types
 const PayrollControlPanel = () => {
   const [payrollAmount, setPayrollAmount] = useState(50000);
   const [isPaused, setIsPaused] = useState(false);
   const [paymentInterval, setPaymentInterval] = useState("monthly");
   const [isAdjustingAmount, setIsAdjustingAmount] = useState(false);
+  const { user } = useContext(AuthContext);
+
+  const parsed = user?.user;
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-US", {
@@ -35,7 +40,11 @@ const PayrollControlPanel = () => {
         {/* Header Section */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Payroll Control Center</h2>
+            <h2 className="text-xl font-semibold">
+              {parsed?.payrollTitle?.toLowerCase().includes("payroll")
+                ? parsed?.payrollTitle
+                : `${parsed?.payrollTitle} Payroll`}
+            </h2>
             <div className="flex items-center space-x-2">
               <span
                 className={`px-3 py-1 rounded-full text-sm ${
@@ -49,7 +58,8 @@ const PayrollControlPanel = () => {
           <div className="flex items-baseline space-x-2">
             {/* <DollarSign className="w-8 h-8 opacity-80" /> */}
             <span className="text-3xl font-bold">
-              {formatCurrency(payrollAmount)}
+              {formatCurrency(parsed?.amount)}
+              {/* {formatCurrency(payrollAmount)} */}
             </span>
             <span className="text-blue-200">total payout</span>
           </div>

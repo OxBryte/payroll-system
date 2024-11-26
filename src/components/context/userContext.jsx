@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setUser(data);
+        setUser(data.user);
         // Store auth state in localStorage
         localStorage.setItem("user", JSON.stringify(data));
         return { success: true, data };
@@ -43,12 +43,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Check for existing auth state on load
+  // login(publicKey.toBase58())
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
     setLoading(false);
+
   }, []);
 
   return (

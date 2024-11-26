@@ -1,16 +1,16 @@
 import { useContext, useEffect } from "react";
 import { AuthContext } from "./src/components/context/userContext";
 import { useNavigate } from "react-router-dom";
-import { useWallet } from "@solana/wallet-adapter-react";
+// import { useWallet } from "@solana/wallet-adapter-react";
 
 // eslint-disable-next-line react/prop-types
 export const ProtectedRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
-  const { publicKey, connected } = useWallet();
+  // const { publicKey, connected } = useWallet();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !user && !connected && !publicKey) {
+    if (!loading && !user) {
       navigate("/");
     }
   }, [user, loading, navigate]);

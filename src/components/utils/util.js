@@ -12,3 +12,13 @@ export const truncate = (str, maxLength) => {
 // const originalString = "This is a long string that needs to be truncated.";
 // const truncatedString = truncate(originalString, 30);
 // console.log(truncatedString); // Output: "This is a long string that..."
+
+
+export const formatCurrency = (amount) => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+};

@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Building,
   CheckCircle2,
   CreditCard,
+  Loader,
   Mail,
   UserPlus,
   Users,
 } from "lucide-react";
 import { BsX } from "react-icons/bs";
+import useAddEmployee from "../hooks/useAddEmployee";
+import { AuthContext } from "../context/userContext";
+import { truncate } from "../utils/util";
 
 export default function PayrollEmployees() {
   const [isHovered, setIsHovered] = useState(false);
@@ -21,6 +25,10 @@ export default function PayrollEmployees() {
     walletAddress: "",
   });
 
+  const { user } = useContext(AuthContext);
+  const parsed = user?.user;
+  const payrollId = user?.user?.id;
+
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -28,14 +36,20 @@ export default function PayrollEmployees() {
     });
   };
 
-  const handleAddEmployee = () => {
+  const { addEmployee, loading } = useAddEmployee();
+
+  const handleAddEmployee = async () => {
     // Logic to add employee goes here
+
+    await addEmployee(formData, payrollId);
+
     // For now, just show the success modal
+    setIsSidebarOpen(false);
     setIsSuccessModalOpen(true);
     setTimeout(() => {
       setIsSuccessModalOpen(false);
-      setIsSidebarOpen(false);
-    }, 3000); // Close modal after 3 seconds
+    }, 3000);
+    window.location.reload();
   };
 
   return (
@@ -44,7 +58,9 @@ export default function PayrollEmployees() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-semibold text-gray-900">
-            Bright Payroll
+            {parsed?.payrollTitle?.toLowerCase().includes("payroll")
+              ? parsed?.payrollTitle
+              : `${parsed?.payrollTitle} Payroll`}
           </h1>
           <button
             onClick={() => setIsSidebarOpen(true)}
@@ -66,46 +82,88 @@ export default function PayrollEmployees() {
                 <Users className="w-5 h-5 text-gray-400" />
                 <h2 className="text-sm font-medium text-gray-700">Employees</h2>
               </div>
-              <span className="text-xs text-gray-500">0 employees</span>
+              <span className="text-xs text-gray-500">
+                {parsed?.employees.length} employees
+              </span>
             </div>
           </div>
-
+          {/* Mapped employees */}
+          {parsed?.employees.length > 0 && (
+            <table className="min-w-full bg-white border border-gray-200">
+              <thead>
+                <tr className="bg-gray-100 text-[12px]">
+                  <th className="py-2 px-4 border-b text-left ">Email</th>
+                  <th className="py-2 px-4 border-b text-left">Full Name</th>
+                  <th className="py-2 px-4 border-b text-left">Salary</th>
+                  <th className="py-2 px-4 border-b text-left">Department</th>
+                  <th className="py-2 px-4 border-b text-left">
+                    Wallet address
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {parsed?.employees.map((employee) => (
+                  <tr
+                    key={employee.id}
+                    className="text-[12px] hover:bg-gray-50"
+                  >
+                    <td className="py-2 px-4 border-b text-left">
+                      {employee.email}
+                    </td>
+                    <td className="py-2 px-4 border-b text-left">
+                      {employee.fullName}
+                    </td>
+                    <td className="py-2 px-4 border-b text-left">
+                      {employee.salary}
+                    </td>
+                    <td className="py-2 px-4 border-b text-left">
+                      {employee.department}
+                    </td>
+                    <td className="py-2 px-4 border-b text-left">
+                      {truncate(employee.walletAddress, 16)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
           {/* Empty State Content */}
-          <div className="px-6 py-12 flex flex-col items-center justify-center">
-            <div className="relative mb-6">
-              <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                <Users
-                  className={`w-12 h-12 ${
-                    isHovered ? "text-blue-600" : "text-blue-400"
-                  } transition-colors`}
-                />
+          {parsed?.employees.length === 0 && (
+            <div className="px-6 py-12 flex flex-col items-center justify-center">
+              <div className="relative mb-6">
+                <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                  <Users
+                    className={`w-12 h-12 ${
+                      isHovered ? "text-blue-600" : "text-blue-400"
+                    } transition-colors`}
+                  />
+                </div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                  <div className="w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
+                </div>
+                <div className="absolute -bottom-1 -left-3 w-5 h-5 bg-blue-50 rounded-full"></div>
+                <div className="absolute top-1 -left-4 w-4 h-4 bg-gray-100 rounded-full"></div>
               </div>
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                <div className="w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
-              </div>
-              <div className="absolute -bottom-1 -left-3 w-5 h-5 bg-blue-50 rounded-full"></div>
-              <div className="absolute top-1 -left-4 w-4 h-4 bg-gray-100 rounded-full"></div>
+
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No employees yet
+              </h3>
+              <p className="text-gray-500 text-center mb-8 max-w-sm">
+                Get started by adding your first employee to manage payroll and
+                track payments.
+              </p>
+
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                <UserPlus className="w-5 h-5 mr-2" />
+                Add Your First Employee
+              </button>
             </div>
-
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No employees yet
-            </h3>
-            <p className="text-gray-500 text-center mb-8 max-w-sm">
-              Get started by adding your first employee to manage payroll and
-              track payments.
-            </p>
-
-            <button
-              onClick={() => setIsSidebarOpen(true)}
-              className="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              <UserPlus className="w-5 h-5 mr-2" />
-              Add Your First Employee
-            </button>
-          </div>
-
+          )}
           <div className="border-t border-gray-100 px-6 py-4">
             <p className="text-xs text-gray-500 text-center">
               Need help setting up your payroll? Check our{" "}
@@ -226,7 +284,7 @@ export default function PayrollEmployees() {
               </label>
               <input
                 type="text"
-                name="fullName"
+                name="walletAddress"
                 value={formData.walletAddress}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -249,9 +307,9 @@ export default function PayrollEmployees() {
                 e.preventDefault(); // Prevent form submission
                 handleAddEmployee(); // Call the function to add employee
               }}
-              className="flex-1 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="flex-1 flex items-center justify-center px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              Add Employee
+              {loading ? <Loader className="w-5 h-5 mr-2" /> : "Add Employee"}
             </button>
           </div>
         </div>

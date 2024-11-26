@@ -4,25 +4,30 @@ const useAddEmployee = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const submitWalletAddress = async (publicKey, payrollData) => {
+  const addEmployee = async (formData, payrollId) => {
     setLoading(true);
     setError(null);
 
     const payload = {
-      walletAddress: publicKey,
-      payrollTitle: payrollData.title,
-      payrollDescription: payrollData.description,
-      amount: payrollData.amount,
+      payrollId,
+      fullName: formData.fullName,
+      email: formData.email,
+      department: formData.department,
+      salary: formData.salary,
+      walletAddress: formData.walletAddress,
     };
 
     try {
-      const response = await fetch("http://localhost:3000/api/create-employees", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/create-employee",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -37,7 +42,7 @@ const useAddEmployee = () => {
     }
   };
 
-  return { submitWalletAddress, loading, error };
+  return { addEmployee, loading, error };
 };
 
 export default useAddEmployee;
