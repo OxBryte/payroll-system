@@ -1,3 +1,4 @@
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useState } from "react";
 import { BiChevronDown, BiMenu, BiX } from "react-icons/bi";
 
@@ -20,9 +21,7 @@ const DashboardNavbar = () => {
           >
             Settings <BiChevronDown className="ml-1 w-4 h-4" />
           </a>
-          <a href="#" className="hover:text-gray-300 transition-colors">
-            Help
-          </a>
+          <WalletMultiButton />
         </div>
 
         {/* Mobile Menu Toggle */}

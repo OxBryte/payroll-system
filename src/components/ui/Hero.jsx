@@ -1,9 +1,30 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/userContext";
+import { useContext, useEffect, useState } from "react";
 
 export default function Hero() {
-  const { connected } = useWallet();
+  const [, setError] = useState("");
+  const { connected, publicKey } = useWallet();
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleLogin = async () => {
+      if (publicKey) {
+        const result = await login(publicKey.toBase58());
+
+        if (result.success) {
+          navigate("/dashboard");
+        } else {
+          setError(result.error);
+        }
+      }
+    };
+
+    handleLogin();
+  }, [publicKey, navigate, login]);
 
   return (
     <>
@@ -32,15 +53,14 @@ export default function Hero() {
         </div>
 
         {/* CTA Button */}
-        {!connected ? (
+        <div className="w-full flex gap-4 justify-center items-center">
           <WalletMultiButton />
-        ) : (
-          <Link to="/payroll">
+          <Link to={connected ? "/payroll" : null}>
             <button className="bg-gray-900 text-white px-8 py-3 rounded-lg text-lg hover:bg-gray-800">
-              Get Started
+              Dashboard
             </button>
           </Link>
-        )}
+        </div>
 
         <div className="mt-20 rounded-xl overflow-hidden">
           <img src="/img.png" alt="" />

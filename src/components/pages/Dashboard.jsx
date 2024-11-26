@@ -2,10 +2,25 @@ import DashboardSidebar from "../ui/DashboardSidebar";
 
 import PayrollControlPanel from "../features/PayrollControlPanel";
 import PayrollEmployees from "../features/PayrollEmployees";
+import { AuthContext } from "../context/userContext";
+import { useContext, useEffect } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useNavigate } from "react-router-dom";
 
 // Dashboard Component
 const Dashboard = () => {
-  // Sample data for statistics cards and payout table
+  const { user,  } = useContext(AuthContext);
+  const { publicKey, connected } = useWallet();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("User data:", user);
+    if (!publicKey || !connected) {
+      localStorage.removeItem("user"); // Remove user from local storage
+      navigate("/");
+    }
+  }, [user, connected, navigate, publicKey]);
+
   const statisticsData = [
     { label: "Total Revenue", value: "$125,000" },
     { label: "Total Expenses", value: "$95,000" },

@@ -7,15 +7,19 @@ import Dashboard from "./components/pages/Dashboard";
 import PayrollSetup from "./components/pages/Payrol";
 import PayrollSystem from "./components/pages/PaySystem";
 import Footer from "./components/ui/Footer";
+import { ProtectedRoute } from "../ProtectedRoute";
+import { AuthProvider } from "./components/context/userContext";
 
 // Layout component that includes common elements like navigation
 const RootLayout = () => {
   return (
     <div>
       <main>
-        <Navbar />
-        <Outlet />
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          <Outlet />
+          <Footer />
+        </AuthProvider>
       </main>
     </div>
   );
@@ -25,8 +29,12 @@ const DashboardRootLayout = () => {
   return (
     <div>
       <main>
-        <DashboardNavbar />
-        <Outlet />
+        <AuthProvider>
+          <ProtectedRoute>
+            <DashboardNavbar />
+            <Outlet />
+          </ProtectedRoute>
+        </AuthProvider>
       </main>
     </div>
   );

@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { DollarSign, Loader2, Check } from "lucide-react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import useSubmitWalletAddress from "../hooks/useSubmit";
+import { truncate } from "../utils/util";
 
 const PayrollSetup = () => {
   const [step, setStep] = useState(1);
@@ -9,8 +12,33 @@ const PayrollSetup = () => {
     amount: "",
     description: "",
   });
+  const { publicKey } = useWallet();
 
-  console.log(formData);
+  console.log(formData, publicKey);
+  
+
+  const {
+    submitWalletAddress,
+    loading: submitLoading,
+  } = useSubmitWalletAddress();
+
+  const handleFund = async () => {
+    try {
+      setLoading(true);
+      if (!publicKey) {
+        throw new Error("Wallet not connected");
+      }
+
+      await submitWalletAddress(publicKey.toBase58(), formData);
+
+      // If successful, move to success step
+      setStep(4);
+    } catch (error) {
+      console.error("Funding failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleNext = () => {
     setLoading(true);
@@ -18,14 +46,6 @@ const PayrollSetup = () => {
       setLoading(false);
       setStep(step + 1);
     }, 1000);
-  };
-
-  const handleFund = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setStep(4);
-    }, 1500);
   };
 
   const handleBack = () => {
@@ -161,6 +181,12 @@ const PayrollSetup = () => {
                       {formData.title}
                     </span>
                   </div>
+                  <div className="flex justify-between items-center mb-3 pb-3 border-b border-gray-200">
+                    <span className="text-sm text-gray-600">Address</span>
+                    <span className="font-medium  text-gray-900">
+                      {truncate(publicKey.toBase58(), 14)}
+                    </span>
+                  </div>
                   {/* <div className="flex justify-between items-center mb-3 pb-3 border-b border-gray-200">
                     <span className="text-sm text-gray-600">Payroll Description</span>
                     <span className="font-medium text-gray-900">
@@ -179,7 +205,7 @@ const PayrollSetup = () => {
                   disabled={loading}
                   className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-colors"
                 >
-                  {loading ? (
+                  {submitLoading ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <DollarSign className="w-4 h-4" />
