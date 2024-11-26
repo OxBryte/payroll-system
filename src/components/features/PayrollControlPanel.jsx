@@ -51,7 +51,7 @@ const PayrollControlPanel = () => {
                   isPaused ? "bg-red-500" : "bg-green-500"
                 }`}
               >
-                {isPaused ? "Paused" : "Active"}
+                {!isPaused || parsed?.status === true ? "Paused" : "Active"}
               </span>
             </div>
           </div>
@@ -137,7 +137,7 @@ const PayrollControlPanel = () => {
                   key={interval}
                   onClick={() => setPaymentInterval(interval)}
                   className={`px-4 py-2 rounded-lg text-sm capitalize ${
-                    paymentInterval === interval
+                    parsed?.interval === interval
                       ? "bg-blue-600 text-white"
                       : "bg-white text-gray-600 hover:bg-gray-100"
                   }`}

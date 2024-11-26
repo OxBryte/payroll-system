@@ -24,16 +24,15 @@ export const AuthProvider = ({ children }) => {
         throw new Error("No wallet address found");
       }
 
-      const response = await fetch(
-        "http://localhost:3000/api/authenticate-wallet",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ walletAddress }),
-        }
-      );
+      const apiUrl = import.meta.env.VITE_API_URL;
+
+      const response = await fetch(`${apiUrl}/authenticate-wallet`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ walletAddress }),
+      });
 
       const data = await response.json();
 
@@ -61,17 +60,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (publicKey) => {
     const walletAddress = publicKey;
+    const apiUrl = import.meta.env.VITE_API_URL;
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/authenticate-wallet",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ walletAddress }),
-        }
-      );
+      const response = await fetch(`${apiUrl}/authenticate-wallet`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ walletAddress }),
+      });
 
       const data = await response.json();
 
@@ -88,6 +85,22 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: "Authentication failed" };
     }
   };
+
+  // useEffect(() => {
+  //   const handleLogin = async () => {
+  //     if (publicKey) {
+  //       const result = await login(publicKey.toBase58());
+
+  //       if (result.success) {
+  //         navigate("/dashboard");
+  //       } else {
+  //         console.log("error", result.error);
+  //       }
+  //     }
+  //   };
+
+  //   handleLogin();
+  // }, [publicKey, navigate, login]);
 
   // Revalidate on initial mount
   // useEffect(() => {

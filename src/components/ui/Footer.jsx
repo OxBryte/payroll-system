@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           {/* Logo & Copyright */}
           <div className="flex flex-col items-center md:items-start gap-2">
-            <h3 className="font-bold text-xl">LOGO</h3>
+            <h3 className="font-bold text-xl">PayRoll</h3>
             <p className="text-sm text-gray-600">© 2024 All rights reserved.</p>
           </div>
 

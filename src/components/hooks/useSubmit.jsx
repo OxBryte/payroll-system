@@ -16,8 +16,10 @@ const useSubmitWalletAddress = () => {
       interval: payrollData.interval,
     };
 
+    const apiUrl = import.meta.env.VITE_API_URL;
+
     try {
-      const response = await fetch("http://localhost:3000/api/create-payroll", {
+      const response = await fetch(`${apiUrl}/create-payroll`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
